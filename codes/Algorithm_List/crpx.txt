@@ -1,0 +1,85 @@
+
+using System;
+ 
+namespace InsertionSort
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int[] A = new int[30];
+            Random ra = new Random();
+            for (int i = 0; i < 30; i++)
+            {
+                A[i] = ra.Next(200);
+            }
+            Program ps = new Program();
+            ps.InsertSort(A);
+            Console.WriteLine("排序结果:");
+            foreach (int a in A)
+            {
+                Console.Write(a + " ");
+            }
+ 
+            Console.ReadKey();
+        }
+ 
+ 
+        public void InsertSort(int[] A)
+        {
+            int temp;
+            int j;
+            for (int i = 1; i < A.Length; i++)//直接从第二个元素开始
+            {
+                temp = A[i];
+                j = i-1;
+                while (j>=0&&temp<A[j])//用<确保相同元素的相对次序不变，而不用<=
+                {
+                    A[j+1] = A[j];//将大的元素后移，而不是每比较完就交换
+                    j--;//从右往左比较，所以--,而不是++
+                }
+                A[j+1] = temp;
+            }
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+改进:
+
+public void InsertSort2(int[] A)
+{
+    int temp;
+    int j;
+    for (int i = 1; i < A.Length; i++)//直接从第二个元素开始
+    {
+        temp = A[i];
+        int key = BinSearch(A, temp, 0, i);//在前i个元素中查找
+        j = i - 1;
+        while (j >= key)//二分查找相当于将比较的截止位置从0换成key，while循环内的代码不用改
+        {
+            A[j + 1] = A[j];//将大的元素后移，而不是每比较完就交换
+            j--;//从右往左比较，所以--,而不是++
+        }
+        A[j + 1] = temp;
+    }
+}
+
+//二分查找算法 https://blog.csdn.net/enternalstar/article/details/103575546
+public int BinSearch(int[] A,int a, int lo,int hi)
+{
+    while (lo<hi)
+    {
+        int middle = lo + ((hi - lo) >> 1);
+        if (a < A[middle])
+        {
+            hi = middle;
+        }
+        else
+        {
+            lo = middle + 1;
+        }
+    }
+    return lo;
+}

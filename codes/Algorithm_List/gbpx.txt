@@ -1,0 +1,79 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+ 
+namespace mergeSort
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int[] A = new int[30];
+            Random ra = new Random();
+            for (int i = 0; i < 30; i++)
+            {
+                A[i] = ra.Next(200);
+            }
+            Program ps = new Program();
+            ps.MergeSort(A,0,A.Length);
+            Console.WriteLine("排序结果:");
+            foreach (int a in A)
+            {
+                Console.Write(a + " ");
+            }
+ 
+            Console.ReadKey();
+ 
+        }
+ 
+ 
+        public void MergeSort(int[] A,int lo,int hi)//左开右闭区间[lo,hi)
+        {
+            if(hi-lo<2) return;//递归基，即递归退出的条件，只有一个元素
+            int middle = (lo+hi) >> 1;
+            MergeSort(A,lo,middle);
+            MergeSort(A,middle,hi);
+            MergeSortedArray(ref A,lo,hi);
+        }
+ 
+        public void MergeSortedArray(ref int[] A,int lo,int hi)
+        {    
+            //将无序数组中待合并的元素复制出来        
+            int[] temp=new int[hi-lo];
+            int i = lo;
+            int j;
+            for (j = 0; j < temp.Length; j++)
+            {
+                temp[j] = A[i++];
+            }           
+            j =0;
+           
+            //获取temp的中间位置
+            int k = temp.Length >> 1;
+            int middle = temp.Length >> 1;
+            //比较前半部分和后半部分，即比较两个有序向量
+            //将小的元素赋值给A的对应位置处
+            while (j< middle&& k<temp.Length)
+            {
+                if (temp[j] <= temp[k])//用<=保证相同元素在排序前后的次序不会改变，不用<
+                    A[lo++] = temp[j++];
+                else
+                {
+                    A[lo++] = temp[k++];
+                }
+ 
+            }
+            while (j< middle)
+            {
+                A[lo++] = temp[j++];
+            }
+            while (k< temp.Length)
+            {
+                A[lo++] = temp[k++];
+            }
+        }
+    }
+}
